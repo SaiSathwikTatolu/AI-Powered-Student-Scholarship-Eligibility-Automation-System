@@ -1,0 +1,235 @@
+{
+  "name": "Student Information Survey (SIS)",
+  "nodes": [
+    {
+      "parameters": {
+        "sendTo": "={{ $('Edit Fields').item.json.Email }}",
+        "subject": "Scholarship Eligibility Status",
+        "message": "=<div style=\"background-color:#f3f4f6;padding:40px;font-family:Arial,sans-serif;\">\n\n  <div style=\"max-width:650px;margin:auto;background:white;border-radius:16px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.1);\">\n\n    <div style=\"background:#16a34a;padding:25px;text-align:center;color:white;\">\n      <h1 style=\"margin:0;\">Student Information Survey</h1>\n      <p style=\"margin-top:8px;\">Scholarship Eligibility Result</p>\n    </div>\n\n    <div style=\"padding:35px;color:#333;\">\n\n      <h2 style=\"margin-top:0;color:#16a34a;\">\n        Congratulations 🎉\n      </h2>\n\n      <p style=\"font-size:16px;line-height:1.7;\">\n        Dear <b>{{ $json['Full Name'] }}</b>,\n      </p>\n\n      <p style=\"font-size:16px;line-height:1.7;\">\n        We are pleased to inform you that you are eligible for the scholarship program based on the submitted eligibility criteria. Our team will provide the further details soon.\n      </p>\n\n      <p style=\"margin-top:30px;font-size:15px;\">\n        Thank you for applying to the Student Information Survey.\n      </p>\n\n      <p style=\"margin-top:30px;\">\n        Regards,<br>\n        <b>Student Information Survey Team</b>\n      </p>\n\n    </div>\n\n    <div style=\"background:#f9fafb;padding:15px;text-align:center;font-size:12px;color:#666;\">\n      Automated Scholarship Notification System\n    </div>\n\n  </div>\n\n</div>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        768,
+        -96
+      ],
+      "id": "0a435d09-2967-46ad-ace3-f30469317ed7",
+      "name": "Send a message",
+      "webhookId": "0fc343c3-c3aa-4e4c-ade2-7921155211e4",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "tBOqhIAsSyF2flky",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a6f7696c-cf21-4497-bf9b-d0a1093fe667",
+              "leftValue": "={{ $json['CGPA '] }}",
+              "rightValue": 9.5,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        464,
+        0
+      ],
+      "id": "aa454d66-0077-4b0e-88cf-53e7f0bf804a",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "10zXLlyOYp6OpB_jISAjfCbxqipj_BZtHkdnwoMEJwRo",
+          "mode": "list",
+          "cachedResultName": "Student Scholarship Info Survey (Responses)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10zXLlyOYp6OpB_jISAjfCbxqipj_BZtHkdnwoMEJwRo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1884088729,
+          "mode": "list",
+          "cachedResultName": "Form responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10zXLlyOYp6OpB_jISAjfCbxqipj_BZtHkdnwoMEJwRo/edit#gid=1884088729"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "0ee64992-4db9-4186-b8ae-9e3f5ab0c2be",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "nJCxTSrYORX3ym9B",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6837e76f-254f-46fa-afc4-94a502e08a15",
+              "name": "Full Name",
+              "value": "={{ $json['Full Name'] }}",
+              "type": "string"
+            },
+            {
+              "id": "9cd93662-206e-407c-b720-971198096c1d",
+              "name": "CGPA ",
+              "value": "={{ $json['CGPA '] }}",
+              "type": "number"
+            },
+            {
+              "id": "da061076-05f4-4c4b-b567-44551cc57477",
+              "name": "Email",
+              "value": "={{ $json.Email }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "2c5ecfc2-c630-4a1a-b901-5efbe0e68d4a",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Edit Fields').item.json.Email }}",
+        "subject": "Scholarship Eligibility Status",
+        "message": "=<div style=\"margin:0;padding:0;background-color:#f4f6f9;font-family:Arial,sans-serif;\">\n\n  <table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" style=\"padding:40px 0;\">\n    <tr>\n      <td align=\"center\">\n\n```\n    <table width=\"650\" cellspacing=\"0\" cellpadding=\"0\" style=\"background:#ffffff;border-radius:18px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.1);\">\n\n      <!-- Header -->\n      <tr>\n        <td align=\"center\" style=\"background:#dc2626;padding:30px;color:white;\">\n\n          <h1 style=\"margin:0;font-size:30px;\">\n            Student Information Survey\n          </h1>\n\n          <p style=\"margin-top:10px;font-size:15px;\">\n            Scholarship Eligibility Result\n          </p>\n\n        </td>\n      </tr>\n\n      <!-- Body -->\n      <tr>\n        <td style=\"padding:40px;color:#333333;\">\n\n          <h2 style=\"margin-top:0;font-size:26px;color:#dc2626;\">\n            Application Status\n          </h2>\n\n          <p style=\"font-size:17px;line-height:1.8;\">\n            Dear <b>{{ $json['Full Name'] }}</b>,\n          </p>\n\n          <p style=\"font-size:16px;line-height:1.8;\">\n            Thank you for submitting your information to the Student Information Survey system.\n          </p>\n\n          <p style=\"font-size:16px;line-height:1.8;\">\n            After reviewing the submitted eligibility criteria, we regret to inform you that you are currently not eligible for the scholarship program.\n          </p>\n\n          <div style=\"margin-top:30px;padding:22px;background:#fef2f2;border-left:5px solid #dc2626;border-radius:10px;\">\n\n            <p style=\"margin:0;font-size:15px;line-height:1.7;\">\n              We appreciate your participation and encourage you to apply again in future scholarship opportunities.\n            </p>\n\n          </div>\n\n          <p style=\"margin-top:35px;font-size:15px;\">\n            Thank you for applying.\n          </p>\n\n          <p style=\"margin-top:30px;font-size:15px;line-height:1.7;\">\n            Regards,<br>\n            <b>Student Information Survey Team</b>\n          </p>\n\n        </td>\n      </tr>\n\n      <!-- Footer -->\n      <tr>\n        <td align=\"center\" style=\"background:#f9fafb;padding:18px;font-size:12px;color:#666666;\">\n\n          Automated Scholarship Notification System\n\n        </td>\n      </tr>\n\n    </table>\n\n  </td>\n</tr>\n```\n\n  </table>\n\n</div>\n",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        768,
+        128
+      ],
+      "id": "b69eae77-29ef-4bbb-b8c6-7a897f179b3a",
+      "name": "Send a message1",
+      "webhookId": "0fc343c3-c3aa-4e4c-ade2-7921155211e4",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "tBOqhIAsSyF2flky",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Send a message": {
+      "main": [
+        []
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "827dd5cb-b881-4e5f-b056-93469252e7ce",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1d6a4d78a992d6d570efc64122a2201602d34ee21956f419853990684c7327e7"
+  },
+  "id": "wwrM66Bd7IZyy6b0",
+  "tags": [
+    {
+      "updatedAt": "2026-05-23T10:43:51.118Z",
+      "createdAt": "2026-05-23T10:43:51.118Z",
+      "id": "22HdQoktBEN41VtT",
+      "name": "SIS"
+    }
+  ]
+}
